@@ -64,7 +64,7 @@
     var calendarEl;
     var calendar;
     var calendario_consulta = {!! json_encode($consultas->toArray()) !!}
-    var consultas = new Array();
+    var consultas = [];
     var ultima = 0;
     var plano;
 
@@ -95,12 +95,12 @@
             header:{
                 left: '',
                 center: 'title',
-                right:  'myCustomButton'
+                right:  'prev,myCustomButton,next'
             },
             footer:{
-                left:   'prev',
+                left:   '',
                 center: '',
-                right:  'next'
+                right:  ''
             },
             titleFormat: {
                 year: 'numeric',
@@ -239,7 +239,6 @@
 
         });
 
-
         calendar.addEventSource( calendario_consulta );
 
         calendar.render();
@@ -309,6 +308,7 @@
         }
         if('datas' == item_id){
             $('#collapseTwo').collapse('show');
+
             if(!clicou){
                 document.getElementById("datas").removeEventListener("click", abrirCalendario()); // Remove Listener ao renderizar calendario
                 clicou=true;
@@ -325,7 +325,14 @@
     function to_prev(item_id){
         if('plano' == item_id){
             $('#collapseOne').collapse('show');
-
+            if(calendar.getEventById( "marcacao" )){
+                while(calendar.getEventById( "marcacao" )){
+                    calendar.getEventById( "marcacao" ).remove();
+                    ultima = 0;
+                    consultas=[];
+                }
+                alert("Remarque suas consultas");
+            }
         }else if('datas' == item_id){
             alert("Limpando marcações");
             $('#collapseTwo').collapse('show');
@@ -335,18 +342,17 @@
     function pre_marcar_data(){
         hora = $("#hora :selected").val();
         var timeParts   = hora.split(':'),
-        data = document.getElementById("start").value,
+        data = document.theForm.elements["start"].value,
         dateParts = data.split('/'),
         date;
 
         date = new Date(dateParts[2], parseInt(dateParts[1], 10) - 1, dateParts[0], timeParts[0], timeParts[1]);
-        alert(data);
         if((date.getTime()/1000) > ultima+2592000){
             ultima = (date.getTime()/1000);
             consultas.push(date.getTime()/1000);
             var newEvent = new Object();
             newEvent.title = 'Consulta ' + consultas.length;
-            var dataSplit = document.getElementById("start").value.split('/');
+            var dataSplit = document.theForm.elements["start"].value.split('/');
             dataSplit.reverse();
             var dataStr = dataSplit.join("-");
             newEvent.start = dataStr + " " + hora;
@@ -364,7 +370,6 @@
     function submit_by_id(){
         if (valida()) // Chama Função de Validação
         {
-            alert(document.getElementById("start").value);
             if(document.getElementById("defaultGroupExample1").checked && consultas.length < 12){
                 plano = 0; // Plano Anual
                 pre_marcar_data();
@@ -388,13 +393,12 @@
     function pagar_consulta(){
         document.getElementById("post_id").value = {!! json_encode($id) !!};
         document.getElementById("planoselected").value = plano;
-        document.getElementById("passar_consultas").value = json_encode(consultas);
+        document.getElementById("id_assinatura").value = 2;
+        document.getElementById("passar_consultas").value = consultas;
         document.getElementById("title").value = "Paciente: ";
 
-        alert(document.getElementById("passar_consultas").value);
         document.marcar_consulta.submit();
     }
-
 
 </script>
 
@@ -415,7 +419,6 @@
                         <label for="titulo">Data</label>
                         <input type="text" readonly class="form-control" onKeyPress="DataHora(event,this)" id="start" name="start">
                         <input type="hidden" class="form-control" onKeyPress="DataHora(event,this)" id="end" name="end">
-
                     </div>
                     <div class="form-group">
                         <label for="titulo" class="control-label">Hora</label>

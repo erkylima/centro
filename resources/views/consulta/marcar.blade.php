@@ -167,13 +167,11 @@
 
                                 <form enctype="multipart/form-data" class="form-horizontal form_class" name="marcar_consulta" id="marcar_consulta" method="POST" action="finalizar"> <!-- Formulário de Datas -->
                                     {{ csrf_field() }}
-                                    <input type='hidden' id="post_id" name="post_id" value="post_id">
-                                    <input type='hidden' id="id_assinatura" name="id_assinatura" value="post_id">
+                                    <input type='hidden' id="post_id" name="post_id">
+                                    <input type='hidden' id="id_assinatura" name="id_assinatura">
                                     <input type='hidden' id="passar_consultas" name="passar_consultas">
                                     <input type='hidden' id="planoselected" name="planoselected">
                                     <input type='hidden' id="title" name="title">
-                                    <input type='hidden' id="start" name="start">
-                                    <input type='hidden' id="end" name="end">
                                     <button type="button" class="btn btn-info " id="datas" onclick="to_prev(this.id)">ANTERIOR</button>
                                     <input type="button" form="marcar_consulta" onclick="pagar_consulta()"class="btn btn-info " value="PAGAR">
                                 </form>
