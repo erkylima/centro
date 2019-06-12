@@ -13,7 +13,7 @@ class CreateAssinaturasTable extends Migration
      */
     public function up()
     {
-        Schema::create('wp_assinaturas', function (Blueprint $table) {
+        Schema::create('assinaturas', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('post_id');
             $table->integer('id_usuario');
@@ -30,6 +30,6 @@ class CreateAssinaturasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wp_assinaturas');
+        Schema::dropIfExists('assinaturas');
     }
 }

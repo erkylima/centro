@@ -6,6 +6,7 @@
 <title>Especialidade — Centro Ressence</title>
 
 <!-- General CSS Files -->
+@yield('css')
 <link rel="stylesheet" href="{{ asset('assets/modules/fontawesome/css/all.min.css') }}">
 
 <!-- Plugins -->

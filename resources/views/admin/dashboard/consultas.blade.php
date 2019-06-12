@@ -68,9 +68,17 @@ Inicio
                             @endforeach
                         @endforeach
                     @if ($count==0)
-                        <p class="section-lead">
-                            Você não possui nenhuma consulta marcada! <button type="button" class="btn btn-warning">Marque Uma Agora</button>
-                        </p>
+                        <div class="container">
+                            <div class="row justify-content-md-center">
+                                <div class="col-md-auto text-center">
+                                        <h5>
+                                            Você não possui nenhuma consulta marcada!
+                                        </h5>
+                                        <a href="{{route('marcar')}}"><button type="button" class="btn btn-warning">Marque Uma Agora</button></a>
+                                </div>
+                            </div>
+                        </div>
+
 
                     @else
                         </tbody>

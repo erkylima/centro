@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WpAssinaturas extends Model
+class Assinaturas extends Model
 {
     //
 }

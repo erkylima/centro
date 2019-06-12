@@ -13,7 +13,7 @@ class CreateConsultasTable extends Migration
      */
     public function up()
     {
-        Schema::create('wp_consultas', function (Blueprint $table) {
+        Schema::create('consultas', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('id_assinaturas');
             $table->integer('post_id');
@@ -21,6 +21,7 @@ class CreateConsultasTable extends Migration
             $table->string('color');
             $table->date('start');
             $table->date('end');
+            $table->timestamps();
         });
     }
 
@@ -31,6 +32,6 @@ class CreateConsultasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wp_consultas');
+        Schema::dropIfExists('consultas');
     }
 }

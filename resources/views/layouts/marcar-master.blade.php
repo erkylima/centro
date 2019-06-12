@@ -43,15 +43,13 @@
 
 <!-- Plugins -->
 <script src="{{ asset('assets/modules/fullcalendar/core/main.js') }}"></script>
-<script src='{{ asset('assets/modules/fullcalendar/daygrid/main.js')}}'></script>
-<script src='{{ asset('assets/modules/fullcalendar/interaction/main.js')}}'></script>
-<script src='{{ asset('assets/modules/fullcalendar/bootstrap/main.js')}}'></script>
-<script src='{{ asset('assets/modules/fullcalendar/core/locales-all.js')}}'></script>
-<script src='{{ asset('assets/modules/fullcalendar/core/locales/pt-br.js')}}'></script>
-<script src='{{ asset('assets/modules/fullcalendar/moment/main.js')}}'></script>
-<script src='{{ asset('assets/modules/fullcalendar/moment-timezone/main.js')}}'></script>
-
-
+<script src="{{ asset('assets/modules/fullcalendar/daygrid/main.js')}}"></script>
+<script src="{{ asset('assets/modules/fullcalendar/interaction/main.js')}}"></script>
+<script src="{{ asset('assets/modules/fullcalendar/bootstrap/main.js')}}"></script>
+<script src="{{ asset('assets/modules/fullcalendar/core/locales-all.js')}}"></script>
+<script src="{{ asset('assets/modules/fullcalendar/core/locales/pt-br.js')}}"></script>
+<script src="{{ asset('assets/modules/fullcalendar/moment/main.js')}}"></script>
+<script src="{{ asset('assets/modules/fullcalendar/moment-timezone/main.js')}}"></script>
 
 
 <!-- Page Specific JS File -->
@@ -63,10 +61,12 @@
 <script>
     var calendarEl;
     var calendar;
-    var calendario_consulta = {!! json_encode($consultas->toArray()) !!}
+    var calendario_consulta = {!! json_encode($consultas->toArray()) !!};
+    var calendario_consulta_length=0;
     var consultas = [];
     var ultima = 0;
     var plano;
+
 
     // Função Responsável por Abrir o Calendário
     function abrirCalendario(){
@@ -142,6 +142,7 @@
                     var contador_hides=0;
                     document.getElementById("selectdefault").selected=true;
 
+
                     $('#cadastrar #oito').show();
                     $('#cadastrar #nove').show();
                     $('#cadastrar #dez').show();
@@ -155,10 +156,8 @@
                     $('#cadastrar #dezoito').show();
                     $('#cadastrar #dezenove').show();
                     $('#cadastrar #vinte').show();
-                    for(var i = 0; i<calendario_consulta.length;i++){
+                    for(var i in calendario_consulta){
                         var datasplit = calendario_consulta[i].start.split(" ");
-
-
                         if(info.startStr == datasplit[0]){
                             switch(datasplit[1]) {
                                 case $('#cadastrar #oito').val():
@@ -236,7 +235,19 @@
             },
             showNonCurrentDates: false,
             eventLimit: true, // allow "more" link when too many events
-
+            events:[
+                @php
+            foreach($consultas as $consulta):
+                echo '{';
+                echo 'id: \' a\',';
+                echo 'title:\''. $consulta->title.'\',';
+                echo 'start:\''. $consulta->start.'\',';
+                echo 'end:\''.$consulta->end.'\',';
+                echo 'color:\''.$consulta->color.'\'';
+                echo '},';
+            endforeach;
+                @endphp
+            ]
         });
 
         calendar.addEventSource( calendario_consulta );
@@ -295,18 +306,21 @@
 
 
     var clicou = false;
+    var quantidade_consultas = 0;
 
     // Função Passar Collapses
     function to_next(item_id){
-        var quantidade_consultas = 0;
-        if(document.getElementById("defaultGroupExample1").checked){
+        if("data1" == item_id){
+            plano = 0; // Plano Anual
             quantidade_consultas = 12;
-        }else if(document.getElementById("defaultGroupExample2").checked){
+        }else if("data2" == item_id){
+            plano = 1; // Plano Mensal
             quantidade_consultas = 6;
-        }else{
+        }else if("data3" == item_id){
+            plano = 1; // Plano Diario
             quantidade_consultas = 1;
         }
-        if('datas' == item_id){
+        if('data1' == item_id || 'data2' == item_id || 'data3' == item_id ){
             $('#collapseTwo').collapse('show');
 
             if(!clicou){
@@ -334,7 +348,6 @@
                 alert("Remarque suas consultas");
             }
         }else if('datas' == item_id){
-            alert("Limpando marcações");
             $('#collapseTwo').collapse('show');
         }
     }
@@ -370,14 +383,11 @@
     function submit_by_id(){
         if (valida()) // Chama Função de Validação
         {
-            if(document.getElementById("defaultGroupExample1").checked && consultas.length < 12){
-                plano = 0; // Plano Anual
+            if(plano == 0){
                 pre_marcar_data();
-            }else if(document.getElementById("defaultGroupExample2").checked && consultas.length < 6){
-                plano = 1 // Plano Semestral
+            }else if(plano == 1){
                 pre_marcar_data();
-            }else if(document.getElementById("defaultGroupExample3").checked && consultas.length < 1){
-                plano = 2; // Plano Diário
+            }else if(plano == 2){
                 pre_marcar_data();
             }else{
                 alert("Você já marcou todas suas consultas. Vá para o próximo passo!")
